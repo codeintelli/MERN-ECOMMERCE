@@ -1,0 +1,24 @@
+here we have learn that we have to divide application in 5 folders in which 3 are of redux and other are normal like components and images
+
+1. Actions: here all api is calling
+
+2. Components:here our app divided into parts
+	2.1: ADMIN: all operation related to admin can full fill here
+	2.2: CART: all operation related to cart can full fill here
+	2.3: HOME: all operation related to home can full fill here
+	2.4: LAYOUT: all layout styles and operation can perform here
+	2.5: ORDER: all operation related to order can full fill here
+	2.6: PRODUCT: all operation related to product can full fill here
+	2.7: ROUTE: all operation related to authenticated routes can full fill here
+
+3. Constants: here we have to declare all variable which we are use in reducers as well as actions
+
+4. Images: all images of frontend
+
+5. Reducers: here we can tell our system on which button or file we can send which type of data 
+
+some files are 
+1. app.css
+2. app.js
+3. index.js
+4. store.js

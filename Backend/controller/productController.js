@@ -17,7 +17,7 @@ const productController = {
   // Get All Product Details
   async AllProduct(req, res, next) {
     try {
-      let resultPerPage = 5;
+      let resultPerPage = 8;
       let productCount = await productModel.countDocuments();
       const apiFeature = new APIFeatures(productModel.find(), req.query)
         .search()

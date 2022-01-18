@@ -3,10 +3,12 @@ const app = express();
 import { APP_PORT } from "./config";
 import { productRoutes, orderRoutes, userRoutes } from "./routes";
 import "./database";
+import cors from "cors";
 import errorDetails from "./middleware/error";
 import cookieParser from "cookie-parser";
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 // todo: All Routes Declare Here
 app.use("/api/v1/", productRoutes);
 app.use("/api/v1/", userRoutes);
