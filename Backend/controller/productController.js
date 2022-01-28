@@ -4,14 +4,31 @@ import { ErrorHandler, APIFeatures } from "../utils";
 const productController = {
   async AddProduct(req, res, next) {
     try {
-      // console.log(req.body);
+      console.log(req.body);
       req.body.user = req.user.id;
       const data = await userModel.findById(req.user.id);
       req.body.userEmail = data.email;
-      const product = await productModel.create(req.body);
-      res.status(200).json({ success: true, msg: "Created Successfully" });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+      const name_data = req.body.name.trim();
+      console.log(req.body.name.trim());
+      const { price, description, category } = req.body;
+      const product = await productModel.create({
+        name: name_data,
+        price,
+        description,
+        category,
+        user: req.user.id,
+        images: {
+          public_id: "sample Image" || req.body.public_id,
+          url: "Sample URL" || req.body.url,
+        },
+      });
+      res.status(200).json({
+        success: true,
+        message: "Created Successfully",
+        name_data: name_data,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   // Get All Product Details
@@ -23,11 +40,20 @@ const productController = {
         .search()
         .filter()
         .pagination(resultPerPage);
-      // const product = await productModel.find();
+      let ProductCategories = await productModel
+        .find({ __v: 0 }, { _id: 0, category: 1 })
+        .distinct("category");
+      // console.log(ProductCategories);
       const product = await apiFeature.query;
-      res.status(200).json({ success: true, product, productCount });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+      res.status(200).json({
+        success: true,
+        product,
+        productCount,
+        resultPerPage,
+        ProductCategories,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   async EditProduct(req, res, next) {
@@ -40,9 +66,9 @@ const productController = {
       product = await productModel.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
       });
-      res.status(200).json({ success: true, msg: "Updated Successfully" });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+      res.status(200).json({ success: true, message: "Updated Successfully" });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
 
@@ -55,9 +81,9 @@ const productController = {
       }
 
       product = await productModel.findByIdAndDelete(req.params.id);
-      res.status(200).json({ success: true, msg: "Deleted Successfully" });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+      res.status(200).json({ success: true, message: "Deleted Successfully" });
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
 
@@ -70,8 +96,8 @@ const productController = {
 
       product = await productModel.findById(req.params.id);
       res.status(200).json({ success: true, product });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
 };

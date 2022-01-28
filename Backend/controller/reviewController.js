@@ -6,7 +6,9 @@ const reviewController = {
   async CreateProductReview(req, res, next) {
     try {
       const { rating, comment, productId } = req.body;
-
+      if (!rating || !comment) {
+        return next(new ErrorHandler("please fill proper details", 400));
+      }
       const review = {
         user: req.user._id,
         name: req.user.name,
@@ -35,8 +37,8 @@ const reviewController = {
         // avg = avg + rev.rating
         avg += rev.rating;
       });
-      console.log(avg);
-      console.log(avg / product.reviews.length);
+      // console.log(avg);
+      // console.log(avg / product.reviews.length);
       product.ratings = avg / product.reviews.length;
 
       await product.save({ validateBeforeSave: false });
@@ -44,8 +46,8 @@ const reviewController = {
       res.status(200).json({
         success: true,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   async GetProductReview(req, res, next) {
@@ -60,8 +62,8 @@ const reviewController = {
         success: true,
         reviews: product.reviews,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   async DeleteProductReview(req, res, next) {
@@ -84,7 +86,7 @@ const reviewController = {
       });
 
       let ratings = 0;
-      console.log(reviews);
+      // console.log(reviews);
       if (reviews.length === 0) {
         ratings = 0;
       } else {
@@ -110,8 +112,8 @@ const reviewController = {
       res.status(200).json({
         success: true,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
 };

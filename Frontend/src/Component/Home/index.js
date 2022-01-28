@@ -2,6 +2,7 @@ import React from "react";
 import { CgMouse } from "react-icons/all";
 import Product from "./ProductCard";
 import "./style.css";
+
 import MetaData from "../Layout/MetaData";
 import { clearErrors, getProduct } from "../../Actions/productAction";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,17 +11,17 @@ import { useAlert } from "react-alert";
 const Home = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
-  const { loading, err, products, productCount } = useSelector(
+  const { loading, error, products, productCount } = useSelector(
     (state) => state.products || {}
   );
-  console.log(productCount);
+
   React.useEffect(() => {
-    if (err) {
-      alert.error(err);
+    if (error) {
+      alert.error(error);
       dispatch(clearErrors());
     }
     dispatch(getProduct());
-  }, [dispatch, err, alert]);
+  }, [dispatch, error, alert]);
   return (
     <>
       {loading ? (
@@ -40,7 +41,9 @@ const Home = () => {
           <h2 className="homeHeading">Featured Product</h2>
           <div className="container" id="container">
             {products &&
-              products.map((products) => <Product products={products} />)}
+              products.map((products) => (
+                <Product key={products._id} products={products} />
+              ))}
           </div>
         </>
       )}

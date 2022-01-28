@@ -29,10 +29,10 @@ const sendEmail = async (options) => {
       text: options.message,
     };
     return await transporter.sendMail(mailOptions);
-  } catch (err) {
-    return new ErrorHandler(err.msg, 500);
+  } catch (error) {
+    return new ErrorHandler(error.message, 500);
   }
 
-  //   res.status(200).json({ success: true, msg: "mail send successfully" });
+  //   res.status(200).json({ success: true, message: "mail send successfully" });
 };
 export default sendEmail;

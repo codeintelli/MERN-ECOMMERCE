@@ -12,22 +12,21 @@ userRoutes.get("/Logout", userController.logout);
 
 // After Login this url is used for user
 userRoutes.get("/profile", isAuthenticatedUser, userController.getUserDetails);
-userRoutes.get(
-  "/details",
-  isAuthenticatedUser,
-  authorizationRoles("admin"),
-  userController.getAllUserDetails
-);
 userRoutes.put(
   "/changePassword",
   isAuthenticatedUser,
-  authorizationRoles("admin"),
   userController.updatePassword
 );
 userRoutes.put(
   "/edit_profile",
   isAuthenticatedUser,
   userController.updateUserDetails
+);
+userRoutes.get(
+  "/details",
+  isAuthenticatedUser,
+  authorizationRoles("admin"),
+  userController.getAllUserDetails
 );
 userRoutes.get(
   "/admin/user/:id",

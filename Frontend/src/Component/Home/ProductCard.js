@@ -1,34 +1,30 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ReactStars from "react-rating-stars-component";
+import { Rating } from "@material-ui/lab";
 
 const ProductCard = ({ products }) => {
   const ratings_star = products.ratings;
-  console.log(ratings_star);
+
   const options = {
-    edit: false,
-    color: "rgba(20,20,20,0.1)",
-    activeColor: "tomato",
-    size: window.innerHeight < 600 ? 20 : 25,
-    // value: Number(products.ratings),
+    size: "large",
     value: ratings_star,
-    isHalf: true,
+    readOnly: true,
+    precision: 0.5,
   };
   // how much discount_percentage we want to give Admin define here
   let discount = (Number(products.price) * 40) / 100;
   let discount_price = discount + Number(products.price);
-  // products.images.url =
-  //   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c2hvZXxlbnwwfHwwfHw%3D&w=1000&q=80";
+
   return (
     <>
-      <Link className="productCard" to={`product/${products._id}`}>
+      <Link className="productCard" to={`../../product-list/${products._id}`}>
         <img src={products.images[0].url} alt={products.name} />
         <p>{products.name}</p>
         <div>
-          <ReactStars {...options} />
-          <span>({products.numOfReviews})</span>
+          <Rating {...options} />
+          <span className="productCardSpan">({products.numOfReviews}) </span>
         </div>
-        <span>
+        <span className="product_price">
           ₹{products.price}{" "}
           <span className="discount_price">₹{discount_price}</span>
         </span>

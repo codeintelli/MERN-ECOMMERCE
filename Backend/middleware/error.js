@@ -1,35 +1,38 @@
 import { ErrorHandler } from "../utils";
 
-const errorDetails = (err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.message = err.message || "Internal Server Error";
+const errorDetails = (error, req, res, next) => {
+  error.statusCode = error.statusCode || 500;
+  error.message = error.message || "Internal Server Error";
 
   // Wrong Mongodb ID Error
-  if (err.name === "CastError") {
-    const message = `Resource not found Invalid: ${err.path}`;
-    err = new ErrorHandler(message, 400);
+  if (error.name === "CastError") {
+    const message = `Resource not found Invalid: ${error.path}`;
+    error = new ErrorHandler(message, 400);
   }
 
   // Mongoose duplicate error
-  if (err.code === 11000) {
-    const message = `Duplicate ${Object.keys(err.keyValue)} Entered`;
-    err = new ErrorHandler(message, 400);
+  if (error.code === 11000) {
+    const message = `Duplicate ${Object.keys(error.keyValue)} Entered`;
+    error = new ErrorHandler(message, 400);
   }
 
   //Wrong JWT Token
-  if (err.name === "JsonWebTokenError") {
+  if (error.name === "JsonWebTokenError") {
     const message = `Json Web Token is invalid, try again`;
-    err = new ErrorHandler(message, 400);
+    error = new ErrorHandler(message, 400);
   }
 
   // JWT Expire Token
-  if (err.name === "TokenExpiredError") {
+  if (error.name === "TokenExpiredError") {
     const message = `Json Web Token is Expired, try again`;
-    err = new ErrorHandler(message, 400);
+    error = new ErrorHandler(message, 400);
   }
-  res
-    .status(err.statusCode)
-    .json({ success: false, error: err, msg: err.message, detail: err.stack });
+  res.status(error.statusCode).json({
+    success: false,
+    error: error,
+    message: error.message,
+    detail: error.stack,
+  });
 };
 
 export default errorDetails;

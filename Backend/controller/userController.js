@@ -1,24 +1,34 @@
 import { userModel } from "../models";
 import { ErrorHandler, sendToken, sendEmail } from "../utils";
+import { FRONTEND_URL } from "../config";
 import crypto from "crypto";
-
+import cloudinary from "cloudinary";
 const userController = {
   async registerUser(req, res, next) {
     try {
+      // console.log(req.body);
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "eComUserProfile",
+        width: 150,
+        crop: "scale",
+      });
+
       const { name, email, password } = req.body;
+
       const user = await userModel.create({
-        name,
+        name: req.body.name.trim(),
         email,
         password,
         avatar: {
-          public_id: "this is sample id",
-          url: "profile pic",
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
         },
       });
-
+      // console.log(user);
       sendToken(user, 201, res);
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      // console.log(error);
+      return next(new ErrorHandler(error, 500));
     }
   },
 
@@ -41,18 +51,26 @@ const userController = {
       }
       const token = user.getJWTToken();
       sendToken(user, 200, res);
-    } catch (err) {}
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
+    }
   },
 
   async logout(req, res, next) {
-    res.cookie("token", null, {
-      expires: new Date(Date.now()),
-      httpOnly: true,
-    });
-    res.status(200).json({
-      success: true,
-      msg: "Successfully Logout",
-    });
+    try {
+      // console.log("req for logout taken");
+      res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+      });
+      // console.log("req for logout approve");
+      res.status(200).json({
+        success: true,
+        message: "Successfully Logout",
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error });
+    }
   },
   async forgotPassword(req, res, next) {
     const user = await userModel.findOne({ email: req.body.email });
@@ -62,9 +80,7 @@ const userController = {
     const resetToken = user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetPasswordUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/password/reset/${resetToken}`;
+    const resetPasswordUrl = `${FRONTEND_URL}/password/reset/${resetToken}`;
 
     const message = `Your password reset token is:- ${resetPasswordUrl} \n\n If you have not requested this email then please ignore it\n\n `;
 
@@ -77,13 +93,12 @@ const userController = {
       res.status(200).json({
         success: true,
         message: `Email sent to ${user.email} successfully`,
-        message,
       });
-    } catch (err) {
+    } catch (error) {
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
-      return next(new ErrorHandler(err.message, 500));
+      return next(new ErrorHandler(error.message, 500));
     }
   },
 
@@ -116,14 +131,19 @@ const userController = {
       user.resetPasswordExpire = undefined;
       await user.save();
       sendToken(user, 200, res);
-    } catch (err) {
-      res.status(500).json({ success: false, msg: err.msg });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
     }
   },
   // if authenticated
   async getUserDetails(req, res, next) {
-    const user = await userModel.findById(req.user.id);
-    res.status(200).json({ success: true, user });
+    try {
+      // console.log("getuserdetail entry point");
+      const user = await userModel.findById(req.user.id);
+      res.status(200).json({ success: true, user });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
   },
   // if authenticated - admin
   async getAllUserDetails(req, res, next) {
@@ -148,8 +168,8 @@ const userController = {
       await user.save();
       sendToken(user, 200, res);
       res.status(200).json({ success: true, user });
-    } catch (err) {
-      return new ErrorHandler(err, 500);
+    } catch (error) {
+      return new ErrorHandler(error, 500);
     }
   },
   // get single user - admin
@@ -167,8 +187,8 @@ const userController = {
         success: true,
         user,
       });
-    } catch (err) {
-      return new ErrorHandler(err, 500);
+    } catch (error) {
+      return new ErrorHandler(error, 500);
     }
   },
   async updateUserRole(req, res, next) {
@@ -189,30 +209,58 @@ const userController = {
       res.status(200).json({
         success: true,
       });
-    } catch (err) {
-      return new ErrorHandler(err, 500);
+    } catch (error) {
+      return new ErrorHandler(error, 500);
     }
   },
 
   async updateUserDetails(req, res, next) {
+    // console.log("entry point reach");
     try {
       const newUserData = {
         name: req.body.name,
         email: req.body.email,
       };
+      // console.log("entry point reach2");
+      if (req.body.avatar !== "") {
+        const user = await userModel.findById(req.user.id);
 
+        // console.log("entry point reach5");
+        const imageId = user.avatar.public_id;
+        // console.log("entry point reach4");
+
+        await cloudinary.v2.uploader.destroy(imageId);
+        // console.log("entry point reach6");
+
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+          folder: "avatars",
+          width: 150,
+          crop: "scale",
+        });
+        // console.log("entry point reach3");
+
+        newUserData.avatar = {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        };
+        // console.log("entry point reach7");
+      }
+
+      // console.log("entry point reach8");
       const user = await userModel.findByIdAndUpdate(req.user.id, newUserData, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
       });
 
+      // console.log("entry point reach9");
       res.status(200).json({
         success: true,
       });
+
       next();
-    } catch (err) {
-      return new ErrorHandler(err, 500);
+    } catch (error) {
+      return new ErrorHandler(error, 500);
     }
   },
 
@@ -232,8 +280,8 @@ const userController = {
         success: true,
         message: "User Deleted Successfully",
       });
-    } catch (err) {
-      return new ErrorHandler(err, 500);
+    } catch (error) {
+      return new ErrorHandler(error, 500);
     }
   },
 };

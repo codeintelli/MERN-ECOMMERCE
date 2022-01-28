@@ -64,10 +64,12 @@
 
 .discount_price {
   text-decoration: line-through;
-  font-size: 16px;
+  font-size: 12px;
   color: tomato;
 }
-
+.product_price {
+  font-size: 16px !important;
+}
 .productCard {
   width: 14vmax;
   display: flex;
@@ -87,8 +89,9 @@
   margin: 0.5vmax;
   display: flex;
   justify-content: flex-start;
+  align-items: center;
 }
-.productCard > div > span {
+.productCardSpan {
   margin: 0.5vmax;
   font: 300 0.7vmax "Roboto";
 }

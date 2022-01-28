@@ -8,8 +8,8 @@ async function updateStock(id, quantity) {
     product.Stock -= quantity;
 
     await product.save({ validateBeforeSave: false });
-  } catch (err) {
-    return next(new ErrorHandler(err, 500));
+  } catch (error) {
+    return next(new ErrorHandler(error, 500));
   }
 }
 
@@ -17,6 +17,7 @@ const orderController = {
   // create new Order
   async createNewOrder(req, res, next) {
     try {
+      // console.log(req.body);
       const {
         shippingInfo,
         orderItems,
@@ -26,7 +27,7 @@ const orderController = {
         shippingPrice,
         totalPrice,
       } = req.body;
-
+      // console.log("data 1");
       const order = await orderModel.create({
         shippingInfo,
         orderItems,
@@ -38,13 +39,14 @@ const orderController = {
         paidAt: Date.now(),
         user: req.user._id,
       });
+      // console.log("data 2");
 
       res.status(201).json({
         success: true,
         order,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   //   Get Single Order
@@ -63,8 +65,8 @@ const orderController = {
         success: true,
         order,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   //   Get Login User Order
@@ -77,8 +79,8 @@ const orderController = {
         totalOrder,
         orders,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   //   Get All Order-Admin
@@ -98,8 +100,8 @@ const orderController = {
         totalAmount,
         orders,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   //   Update Order Status - admin
@@ -133,8 +135,8 @@ const orderController = {
         success: true,
         order,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
   //   Delete Order - Admin
@@ -151,8 +153,8 @@ const orderController = {
       res.status(200).json({
         success: true,
       });
-    } catch (err) {
-      return next(new ErrorHandler(err, 500));
+    } catch (error) {
+      return next(new ErrorHandler(error, 500));
     }
   },
 };
