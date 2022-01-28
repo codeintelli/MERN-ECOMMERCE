@@ -48,10 +48,8 @@ export const myOrders = () => async (dispatch) => {
       "http://localhost:5000/api/v1/user/order",
       config
     );
-    // console.log(data);
     dispatch({ type: MY_ORDER_SUCCESS, payload: data.orders });
   } catch (error) {
-    // console.log(error.response);
     dispatch({
       type: MY_ORDER_FAIL,
       payload: error.response,
@@ -67,10 +65,8 @@ export const getOrderDetails = (id) => async (dispatch) => {
       `http://localhost:5000/api/v1/order/${id}`,
       config
     );
-    // console.log(data);
     dispatch({ type: ORDER_DETAILS_SUCCESS, payload: data.order });
   } catch (error) {
-    // console.log(error);
     dispatch({
       type: ORDER_DETAILS_FAIL,
       payload: error.response,

@@ -13,7 +13,6 @@ const OrderDetails = ({ match }) => {
 
   const dispatch = useDispatch();
   const alert = useAlert();
-  // console.log("inside orderDetails", order);
   React.useEffect(() => {
     if (error) {
       alert.error(error);

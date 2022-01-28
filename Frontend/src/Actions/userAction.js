@@ -36,9 +36,7 @@ export const login = (email, password) => async (dispatch) => {
       { email, password },
       config
     );
-    // console.log("login", data);
     Cookies.set("token", data.token);
-    // console.log("login data.token", data.token);
     dispatch({ type: LOGIN_SUCCESS, payload: data.user });
   } catch (error) {
     dispatch({ type: LOGIN_FAIL, payload: error.response.data.message });
@@ -59,12 +57,13 @@ export const register = (userData) => async (dispatch) => {
       userData,
       config
     );
-    // console.log("login", data);
     Cookies.set("token", data.token);
-    // console.log("login data.token", data.token);
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data.user });
   } catch (error) {
-    dispatch({ type: USER_REGISTER_FAIL, payload: error.response.data.message });
+    dispatch({
+      type: USER_REGISTER_FAIL,
+      payload: error.response.data.message,
+    });
   }
 };
 
@@ -120,7 +119,10 @@ export const updateProfile = (userData) => async (dispatch) => {
     );
     dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: data.success });
   } catch (error) {
-    dispatch({ type: UPDATE_PROFILE_FAIL, payload: error.response.data.message });
+    dispatch({
+      type: UPDATE_PROFILE_FAIL,
+      payload: error.response.data.message,
+    });
   }
 };
 
@@ -143,7 +145,10 @@ export const updatePassword = (password) => async (dispatch) => {
     );
     dispatch({ type: UPDATE_PASSWORD_SUCCESS, payload: data.success });
   } catch (error) {
-    dispatch({ type: UPDATE_PASSWORD_FAIL, payload: error.response.data.message });
+    dispatch({
+      type: UPDATE_PASSWORD_FAIL,
+      payload: error.response.data.message,
+    });
   }
 };
 

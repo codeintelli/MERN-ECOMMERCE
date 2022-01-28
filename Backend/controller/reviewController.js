@@ -37,8 +37,7 @@ const reviewController = {
         // avg = avg + rev.rating
         avg += rev.rating;
       });
-      // console.log(avg);
-      // console.log(avg / product.reviews.length);
+
       product.ratings = avg / product.reviews.length;
 
       await product.save({ validateBeforeSave: false });
@@ -69,7 +68,6 @@ const reviewController = {
   async DeleteProductReview(req, res, next) {
     try {
       const product = await productModel.findById(req.query.productId);
-      // console.log(`product Data:-`, product);
       if (!product) {
         return next(new ErrorHandler("Product not found", 404));
       }
@@ -77,7 +75,6 @@ const reviewController = {
       const reviews = product.reviews.filter(
         (rev) => rev._id.toString() !== req.query.id.toString()
       );
-      // console.log(`req.query.id Data:-`, req.query.id);
 
       let avg = 0;
 
@@ -86,7 +83,6 @@ const reviewController = {
       });
 
       let ratings = 0;
-      // console.log(reviews);
       if (reviews.length === 0) {
         ratings = 0;
       } else {

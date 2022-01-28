@@ -7,7 +7,6 @@ import {
   getProductDetails,
   newReview,
 } from "../../Actions/productAction";
-import ReactStars from "react-rating-stars-component";
 import Loader from "../Layout/Loader";
 import ReviewCard from "./ReviewCard";
 import { useAlert } from "react-alert";
@@ -73,9 +72,7 @@ const ProductDetails = ({ match }) => {
     myForm.set("rating", rating);
     myForm.set("comment", comment);
     myForm.set("productId", match.params.id);
-    console.log("data added");
     dispatch(newReview(myForm));
-    console.log("data added 2");
     submitReviewToggle();
     // window.location.reload();
   };
@@ -86,7 +83,6 @@ const ProductDetails = ({ match }) => {
     }
     if (reviewError) {
       alert.error(reviewError);
-      console.log(reviewError);
       dispatch(clearErrors());
     }
     if (success) {

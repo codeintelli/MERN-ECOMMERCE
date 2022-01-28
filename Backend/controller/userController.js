@@ -6,7 +6,6 @@ import cloudinary from "cloudinary";
 const userController = {
   async registerUser(req, res, next) {
     try {
-      // console.log(req.body);
       const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
         folder: "eComUserProfile",
         width: 150,
@@ -24,10 +23,8 @@ const userController = {
           url: myCloud.secure_url,
         },
       });
-      // console.log(user);
       sendToken(user, 201, res);
     } catch (error) {
-      // console.log(error);
       return next(new ErrorHandler(error, 500));
     }
   },
@@ -45,7 +42,6 @@ const userController = {
         return next(new ErrorHandler("Invalid Email and password", 400));
       }
       const isPasswordMatched = await user.comparePassword(password);
-      // console.log(isPasswordMatched);
       if (!isPasswordMatched) {
         return next(new ErrorHandler("Invalid Email and password", 400));
       }
@@ -58,12 +54,10 @@ const userController = {
 
   async logout(req, res, next) {
     try {
-      // console.log("req for logout taken");
       res.cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
       });
-      // console.log("req for logout approve");
       res.status(200).json({
         success: true,
         message: "Successfully Logout",
@@ -104,12 +98,10 @@ const userController = {
 
   async resetPassword(req, res, next) {
     try {
-      // console.log(req.params.token);
       const resetPasswordToken = crypto
         .createHash("sha256")
         .update(req.params.token)
         .digest("hex");
-      // console.log(`reset password token: ${resetPasswordToken}`);
       const user = await userModel.findOne({
         resetPasswordToken,
         resetPasswordExpire: { $gt: Date.now() },
@@ -135,20 +127,21 @@ const userController = {
       res.status(500).json({ success: false, message: error.message });
     }
   },
-  // if authenticated
   async getUserDetails(req, res, next) {
     try {
-      // console.log("getuserdetail entry point");
       const user = await userModel.findById(req.user.id);
       res.status(200).json({ success: true, user });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
   },
-  // if authenticated - admin
   async getAllUserDetails(req, res, next) {
-    const user = await userModel.find();
-    res.status(200).json({ success: true, user });
+    try {
+      const user = await userModel.find();
+      res.status(200).json({ success: true, user });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
   },
   // if authenticated
   async updatePassword(req, res, next) {
@@ -199,7 +192,6 @@ const userController = {
         role: req.body.role,
       };
 
-      // console.log(newUserData);
       await userModel.findByIdAndUpdate(req.params.id, newUserData, {
         new: true,
         runValidators: true,
@@ -215,45 +207,36 @@ const userController = {
   },
 
   async updateUserDetails(req, res, next) {
-    // console.log("entry point reach");
     try {
       const newUserData = {
         name: req.body.name,
         email: req.body.email,
       };
-      // console.log("entry point reach2");
       if (req.body.avatar !== "") {
         const user = await userModel.findById(req.user.id);
 
-        // console.log("entry point reach5");
         const imageId = user.avatar.public_id;
-        // console.log("entry point reach4");
 
         await cloudinary.v2.uploader.destroy(imageId);
-        // console.log("entry point reach6");
 
         const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
           folder: "avatars",
           width: 150,
           crop: "scale",
         });
-        // console.log("entry point reach3");
 
         newUserData.avatar = {
           public_id: myCloud.public_id,
           url: myCloud.secure_url,
         };
-        // console.log("entry point reach7");
       }
 
-      // console.log("entry point reach8");
       const user = await userModel.findByIdAndUpdate(req.user.id, newUserData, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
       });
 
-      // console.log("entry point reach9");
       res.status(200).json({
         success: true,
       });

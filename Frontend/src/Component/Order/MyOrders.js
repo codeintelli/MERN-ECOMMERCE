@@ -8,7 +8,6 @@ import { useAlert } from "react-alert";
 import { DataGrid } from "@material-ui/data-grid";
 import { Link } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
-import LaunchIcon from "@material-ui/icons/Launch";
 import DescriptionIcon from "@material-ui/icons/Description";
 
 const MyOrders = () => {

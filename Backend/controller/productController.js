@@ -4,12 +4,10 @@ import { ErrorHandler, APIFeatures } from "../utils";
 const productController = {
   async AddProduct(req, res, next) {
     try {
-      console.log(req.body);
       req.body.user = req.user.id;
       const data = await userModel.findById(req.user.id);
       req.body.userEmail = data.email;
       const name_data = req.body.name.trim();
-      console.log(req.body.name.trim());
       const { price, description, category } = req.body;
       const product = await productModel.create({
         name: name_data,
@@ -43,7 +41,7 @@ const productController = {
       let ProductCategories = await productModel
         .find({ __v: 0 }, { _id: 0, category: 1 })
         .distinct("category");
-      // console.log(ProductCategories);
+
       const product = await apiFeature.query;
       res.status(200).json({
         success: true,

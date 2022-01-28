@@ -21,7 +21,6 @@ const sendEmail = async (options) => {
         pass: SMTP_PASS,
       },
     });
-    // console.log(options);
     const mailOptions = {
       from: SMTP_MAIL,
       to: options.email,

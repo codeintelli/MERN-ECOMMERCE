@@ -17,7 +17,6 @@ const orderController = {
   // create new Order
   async createNewOrder(req, res, next) {
     try {
-      // console.log(req.body);
       const {
         shippingInfo,
         orderItems,
@@ -27,7 +26,7 @@ const orderController = {
         shippingPrice,
         totalPrice,
       } = req.body;
-      // console.log("data 1");
+
       const order = await orderModel.create({
         shippingInfo,
         orderItems,
@@ -39,7 +38,6 @@ const orderController = {
         paidAt: Date.now(),
         user: req.user._id,
       });
-      // console.log("data 2");
 
       res.status(201).json({
         success: true,

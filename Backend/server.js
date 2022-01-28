@@ -41,8 +41,9 @@ app.use("/api/v1/", paymentRoutes);
 app.use(errorDetails);
 // ? when we declare any undefine variable then this error occur so we can handle this error here
 process.on("uncaughtException", (error) => {
-  console.log(error.message);
-  console.log(`Shutting down the server due to uncaught exception`);
+  console.log(
+    `Shutting down the server due to uncaught exception:${error.message}`
+  );
   process.exit(1);
 });
 // Cloudinary Configuration
@@ -59,8 +60,9 @@ let server = app.listen(APP_PORT, () => {
 // * unhandled promise rejection: it occur when we are put incorrect mongodb string in short it accept all mongodb connection errors
 //  * when we are handling this error we dont need to put catch block in database connection file
 process.on("unhandledRejection", (error) => {
-  console.log(error.message);
-  console.log(`Shutting down the server due to unhandled promise rejection`);
+  console.log(
+    `Shutting down the server due to unhandled promise rejection  : ${error.message}`
+  );
   server.close(() => {
     process.exit(1);
   });

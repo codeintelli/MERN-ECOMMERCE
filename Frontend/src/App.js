@@ -46,10 +46,8 @@ const App = () => {
       "http://localhost:5000/api/v1/stripeApikey",
       config
     );
-    // console.log(data);
     setStripeApiKey(data.stripeApiKey);
   }
-  // console.log(stripeApiKey);
   React.useEffect(() => {
     WebFont.load({
       google: {

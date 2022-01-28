@@ -12,7 +12,7 @@ const EditProfile = ({ history }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
 
-  const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const { error, isUpdated, loading } = useSelector((state) => state.profile);
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
@@ -48,7 +48,6 @@ const EditProfile = ({ history }) => {
     if (user) {
       setName(user.name);
       setEmail(user.email);
-      // console.log(user.avatar.url);
       setAvatarPreview(user.avatar.url);
     }
     if (error) {

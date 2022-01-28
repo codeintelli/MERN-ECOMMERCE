@@ -49,10 +49,8 @@ export const getProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAIL_REQUEST });
     const { data } = await axios.get(`${url}/api/v1/product/${id}`);
-    console.log(data);
     dispatch({ type: PRODUCT_DETAIL_SUCCESS, payload: data.product });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: PRODUCT_DETAIL_FAIL,
       payload: error.response.data.message,
@@ -101,7 +99,6 @@ export const getAllReviews = (id) => async (dispatch) => {
       payload: data.reviews,
     });
   } catch (error) {
-    console.log("error", error);
     dispatch({
       type: ALL_REVIEW_FAIL,
       payload: error.response.data.message,
