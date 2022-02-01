@@ -22,6 +22,18 @@ import {
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_FAIL,
+  ADMIN_ALL_USER_REQUEST,
+  ADMIN_ALL_USER_SUCCESS,
+  ADMIN_ALL_USER_FAIL,
+  ADMIN_USER_DETAIL_REQUEST,
+  ADMIN_USER_DETAIL_SUCCESS,
+  ADMIN_USER_DETAIL_FAIL,
+  ADMIN_UPDATE_USER_REQUEST,
+  ADMIN_UPDATE_USER_SUCCESS,
+  ADMIN_UPDATE_USER_FAIL,
+  ADMIN_DELETE_USER_REQUEST,
+  ADMIN_DELETE_USER_SUCCESS,
+  ADMIN_DELETE_USER_FAIL,
   CLEAR_ERRORS,
 } from "../Constants/userConstant";
 import axios from "axios";
@@ -191,6 +203,109 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: RESET_PASSWORD_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// get All Users
+export const getAllUsers = () => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_ALL_USER_REQUEST });
+    const token_Data = Cookies.get("token");
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+    const { data } = await axios.get(
+      `http://localhost:5000/api/v1/details`,
+      config
+    );
+
+    dispatch({ type: ADMIN_ALL_USER_SUCCESS, payload: data.users });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_ALL_USER_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// get  User Details
+export const getUserDetails = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_USER_DETAIL_REQUEST });
+    const token_Data = Cookies.get("token");
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+    const { data } = await axios.get(
+      `http://localhost:5000/api/v1/admin/user/${id}`,
+      config
+    );
+
+    dispatch({ type: ADMIN_USER_DETAIL_SUCCESS, payload: data.user });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_USER_DETAIL_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Update User
+export const updateUser = (id, userData) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_UPDATE_USER_REQUEST });
+    const token_Data = Cookies.get("token");
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `http://localhost:5000/api/v1/admin/user/${id}`,
+      userData,
+      config
+    );
+
+    dispatch({ type: ADMIN_UPDATE_USER_SUCCESS, payload: data.success });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_UPDATE_USER_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Delete User
+export const deleteUser = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_DELETE_USER_REQUEST });
+    const token_Data = Cookies.get("token");
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+
+    const { data } = await axios.delete(
+      `http://localhost:5000/api/v1/admin/user/${id}`,
+      config
+    );
+
+    dispatch({ type: ADMIN_DELETE_USER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_DELETE_USER_FAIL,
       payload: error.response.data.message,
     });
   }

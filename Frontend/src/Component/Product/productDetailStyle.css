@@ -7,6 +7,10 @@
   display: flex;
 }
 
+.Carousel-indicators-18 {
+  display: none !important;
+}
+
 .greenColor {
   color: green;
   margin-left: 10px;

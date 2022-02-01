@@ -137,8 +137,8 @@ const userController = {
   },
   async getAllUserDetails(req, res, next) {
     try {
-      const user = await userModel.find();
-      res.status(200).json({ success: true, user });
+      const users = await userModel.find();
+      res.status(200).json({ success: true, users });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -249,7 +249,7 @@ const userController = {
 
   async deleteUser(req, res, next) {
     try {
-      const user = await User.findById(req.params.id);
+      const user = await userModel.findById(req.params.id);
 
       if (!user) {
         return next(

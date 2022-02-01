@@ -84,7 +84,9 @@ const orderController = {
   //   Get All Order-Admin
   async GetAllOrder(req, res, next) {
     try {
-      const orders = await orderModel.find();
+      const orders = await orderModel
+        .find()
+        .populate({ path: "user", select: "name email" });
       const totalOrder = await orderModel.countDocuments();
       let totalAmount = 0;
 

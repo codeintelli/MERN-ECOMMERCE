@@ -22,6 +22,8 @@ userRoutes.put(
   isAuthenticatedUser,
   userController.updateUserDetails
 );
+
+// admin
 userRoutes.get(
   "/details",
   isAuthenticatedUser,

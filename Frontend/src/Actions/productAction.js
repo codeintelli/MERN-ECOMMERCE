@@ -13,10 +13,22 @@ import {
   NEW_REVIEW_FAIL,
   ALL_REVIEW_REQUEST,
   ALL_REVIEW_SUCCESS,
+  UPDATE_PRODUCT_REQUEST,
+  UPDATE_PRODUCT_SUCCESS,
+  UPDATE_PRODUCT_FAIL,
   ALL_REVIEW_FAIL,
   DELETE_REVIEW_REQUEST,
   DELETE_REVIEW_SUCCESS,
   DELETE_REVIEW_FAIL,
+  DELETE_PRODUCT_REQUEST,
+  DELETE_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_FAIL,
+  ADMIN_PRODUCT_REQUEST,
+  ADMIN_PRODUCT_SUCCESS,
+  ADMIN_PRODUCT_FAIL,
+  NEW_PRODUCT_REQUEST,
+  NEW_PRODUCT_SUCCESS,
+  NEW_PRODUCT_FAIL,
   CLEAR_ERRORS,
 } from "../Constants/productConstant";
 
@@ -87,6 +99,76 @@ export const newReview = (reviewData) => async (dispatch) => {
   }
 };
 
+// NEW PRODUCT
+export const createProduct = (productData) => async (dispatch) => {
+  try {
+    dispatch({ type: NEW_PRODUCT_REQUEST });
+    const token_Data = Cookies.get("token");
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+    const { data } = await axios.post(
+      `${url}/api/v1/product`,
+      productData,
+      config
+    );
+
+    dispatch({
+      type: NEW_PRODUCT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: NEW_PRODUCT_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const deleteProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_PRODUCT_REQUEST });
+    const token_Data = Cookies.get("token");
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+    const { data } = await axios.delete(`${url}/api/v1/product/${id}`, config);
+    dispatch({ type: DELETE_PRODUCT_SUCCESS, payload: data.success });
+  } catch (error) {
+    dispatch({
+      type: DELETE_PRODUCT_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const updateProduct = (id, productData) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_PRODUCT_REQUEST });
+    const token_Data = Cookies.get("token");
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+    const { data } = await axios.put(
+      `${url}/api/v1/product/${id}`,
+      productData,
+      config
+    );
+    dispatch({ type: UPDATE_PRODUCT_SUCCESS, payload: data.success });
+  } catch (error) {
+    dispatch({ type: UPDATE_PRODUCT_FAIL, error: error.response.data.message });
+  }
+};
+
 // Get All Reviews of a Product
 export const getAllReviews = (id) => async (dispatch) => {
   try {
@@ -129,6 +211,30 @@ export const deleteReviews = (reviewId, productId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: DELETE_REVIEW_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+export const getAdminProduct = () => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_PRODUCT_REQUEST });
+    const token_Data = Cookies.get("token");
+    let config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token_Data}`,
+      },
+    };
+    const { data } = await axios.get(`${url}/api/v1/admin/product`, config);
+
+    dispatch({
+      type: ADMIN_PRODUCT_SUCCESS,
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_PRODUCT_FAIL,
       payload: error.response.data.message,
     });
   }

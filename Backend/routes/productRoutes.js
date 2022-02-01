@@ -25,6 +25,12 @@ productRoutes.delete(
 );
 
 productRoutes.get("/product/:id", productController.SpecificProduct);
+productRoutes.get(
+  "/admin/product",
+  isAuthenticatedUser,
+  authorizationRoles("admin"),
+  productController.AdminAllProducts
+);
 
 productRoutes.put(
   "/review",

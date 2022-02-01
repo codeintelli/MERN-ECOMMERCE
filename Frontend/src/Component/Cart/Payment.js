@@ -90,7 +90,7 @@ const Payment = ({ history }) => {
           dispatch(createOrder(order));
           localStorage.clear();
           sessionStorage.clear();
-          history.push("/order/success");
+          history.push("/userorder/success");
         } else {
           alert.error("There's some issue while processing payment ");
         }

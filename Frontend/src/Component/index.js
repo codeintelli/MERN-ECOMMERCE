@@ -26,3 +26,14 @@ export { default as OrderSuccess } from "./Cart/OrderSuccess";
 // order routes
 export { default as MyOrders } from "./Order/MyOrders";
 export { default as OrderDetails } from "./Order/OrderDetails";
+
+// ADMIN ROUTES
+export { default as Dashboard } from "./Admin/Dashboard";
+export { default as ProductList } from "./Admin/ProductList";
+export { default as NewProduct } from "./Admin/NewProduct";
+export { default as UpdateProduct } from "./Admin/UpdateProduct";
+export { default as OrderList } from "./Admin/OrderList";
+export { default as ProcessOrder } from "./Admin/ProcessOrder";
+export { default as UsersList } from "./Admin/UsersList";
+export { default as UpdateUser } from "./Admin/UpdateUser";
+export { default as ProductReviews } from "./Admin/ProductReviews";
