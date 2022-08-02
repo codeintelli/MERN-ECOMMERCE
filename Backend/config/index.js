@@ -1,7 +1,7 @@
 require("dotenv").config({ path: "./config.env" });
 
 export const {
-  APP_PORT,
+  PORT,
   DB_URL,
   DEBUG_MODE,
   JWT_SECRET,

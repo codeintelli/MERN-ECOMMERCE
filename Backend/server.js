@@ -1,12 +1,7 @@
 // package calling
 import express from "express";
 const app = express();
-import {
-  APP_PORT,
-  CLOUD_NAME,
-  CLOUD_API_KEY,
-  CLOUD_API_SECRET,
-} from "./config";
+import { PORT, CLOUD_NAME, CLOUD_API_KEY, CLOUD_API_SECRET } from "./config";
 import {
   productRoutes,
   orderRoutes,
@@ -53,8 +48,8 @@ cloudinary.config({
   api_secret: CLOUD_API_SECRET,
 });
 
-let server = app.listen(APP_PORT, () => {
-  console.log("Server Connected");
+let server = app.listen(PORT, () => {
+  console.log("Server Connected",PORT);
 });
 
 // * unhandled promise rejection: it occur when we are put incorrect mongodb string in short it accept all mongodb connection errors
